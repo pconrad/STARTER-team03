@@ -1,5 +1,16 @@
 # Creates/Resets the gh-pages branch to the intended start state
 
+# Pre-requisites: 
+# (1) Create a slack app following these instructions: 
+#    https://docs.celigo.com/hc/en-us/articles/7140655476507-How-to-create-an-app-and-retrieve-OAuth-token-in-Slack
+# (2) Add the OAuth scope chat:write 
+# (3) Create an OAuth token
+# (4) Create a repository secret under "Secrets/Actions/Repository Secret" called 
+#   SLACK_BOT_USER_OAUTH_ACCESS_TOKEN  and put the value of the OAuth token there
+# (5) Put the channel number in the env.CHANNEL_NUMBER variable below.   
+#   (or maybe refactor this into a repository secret? ) 
+# (6) To test, merge a PR.
+
 name: "81-pull-request-slack-msg: Send a slack message whenever there's a pull request"
 on:
   pull_request:
@@ -9,6 +20,7 @@ on:
 
 env:
   GH_TOKEN: ${{ github.token }}
+  CHANNEL_NUMBER: C071C264LJ1
 
 permissions:
   contents: write
@@ -50,6 +62,13 @@ jobs:
           echo "branch_name=${BRANCH}"
           echo "branch_name=${BRANCH}" >> "$GITHUB_OUTPUT"
 
+# TODO: from the ${{ github.repository }} name, extract the team number
+# and use a lookup table to conver that into the channel number for the team.
+
+# Also consider pulling the github usernames associated with the PR
+# and using a lookup table to convert those into slack names, and then
+# send customized DMs to the users directly.
+
   if_merged:
     needs: get-pr-num
     if: github.event.pull_request.merged == true
@@ -64,8 +83,8 @@ jobs:
       id: notify
       with:
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_USER_OAUTH_ACCESS_TOKEN }}
-          slack-channel: C071C264LJ1
-          slack-text: Hello! PR ${{needs.get-pr-num.outputs.pr_number}} was merged, as event "${{ github.event_name }}" in "${{ github.repository }}" 🤓
+          slack-channel: ${{ env.CHANNEL_NUMBER }}
+          slack-text: Hello!  PR https://github.com/${{ github.repository }}/pull/${{needs.get-pr-num.outputs.pr_number}} was merged.  INSERT HERE: the action you want the student to take now.
     - name: Result from "Send Message"
       run: echo "The result was ${{ steps.notify.outputs.slack-result }}"
 
@@ -77,5 +96,14 @@ jobs:
     - run: |
         pr_number=${{needs.get-pr-num.outputs.pr_number}}
         echo The PR ${pr_number} was closed and not merged
+    - name: Send message to Slack API
+      uses: archive/github-actions-slack@v2.0.0
+      id: notify
+      with:
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_USER_OAUTH_ACCESS_TOKEN }}
+          slack-channel: ${{ env.CHANNEL_NUMBER }}
+          slack-text: Hello!  PR https://github.com/${{ github.repository }}/pull/${{needs.get-pr-num.outputs.pr_number}} was closed without merging.  INSERT HERE: the action you want the student to take now.
+    - name: Result from "Send Message"
+      run: echo "The result was ${{ steps.notify.outputs.slack-result }}"
 
 
