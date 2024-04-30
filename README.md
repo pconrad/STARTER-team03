@@ -1,6 +1,10 @@
-# STARTER-team03
+# pconrad/STARTER-team03
 
-This is a test of 
+
+This repo is for testing workflow 81, which sends a message to slack after
+there's a merge of a PR.
+
+See also: https://docs.celigo.com/hc/en-us/articles/7140655476507-How-to-create-an-app-and-retrieve-OAuth-token-in-Slack
 
 Instructions: <https://ucsb-cs156.github.io/s24/lab/team03.html>
 
