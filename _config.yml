@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: pconrad/STARTER-team03
 owner: pconrad
 repo_name: STARTER-team03
-pull_requests: [{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"prTest4","number":4,"title":"pc - test pr for workflow 81, number 4","url":"https://github.com/pconrad/STARTER-team03/pull/4"}]
+pull_requests: []
