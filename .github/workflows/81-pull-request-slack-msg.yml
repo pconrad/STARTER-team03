@@ -65,7 +65,7 @@ jobs:
       with:
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_USER_OAUTH_ACCESS_TOKEN }}
           slack-channel: C071C264LJ1
-          slack-text: Hello! PR${pr_number} was merged, as event "${{ github.event_name }}" in "${{ github.repository }}" 🤓
+          slack-text: Hello! PR ${{needs.get-pr-num.outputs.pr_number}} was merged, as event "${{ github.event_name }}" in "${{ github.repository }}" 🤓
     - name: Result from "Send Message"
       run: echo "The result was ${{ steps.notify.outputs.slack-result }}"
 
