@@ -1,6 +1,6 @@
 # STARTER-team03
 
-This is a test
+This is a test of 
 
 Instructions: <https://ucsb-cs156.github.io/s24/lab/team03.html>
 
